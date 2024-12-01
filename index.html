@@ -101,11 +101,32 @@
         body {
             animation: flicker 5s infinite;
         }
+        
+        .description {
+            max-width: 600px;
+            margin: 20px auto;
+            line-height: 1.6;
+            font-size: 16px;
+            text-align: left;
+            padding: 20px;
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+        }
     </style>
-  <script type="module" crossorigin src="/whatday.xyz/assets/index-CWk5d4Pu.js"></script>
+  <script type="module" crossorigin src="/assets/index-CWk5d4Pu.js"></script>
 </head>
 <body>
     <h1>&gt; what day is it?_</h1>
+    
+    <div class="description">
+        Welcome to the world's first decentralized day-of-week oracle. 
+        Seven Clanker-deployed ERC-20 tokens compete in an eternal battle to determine what day it is, 
+        powered by Uniswap v3 on Base. The token with the highest fully diluted value 
+        wins - simple as that. No committees, no voting, just pure market forces.
+        <br><br>
+        And remember: it's early days.
+    </div>
+
     <div class="current-day" id="currentDay">Loading...</div>
     <div class="token-list" id="tokenList"></div>
     
