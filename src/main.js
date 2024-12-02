@@ -5,7 +5,7 @@ const TOKENS = {
     'Tuesday': '0x36Aaf72b781Fa7ff68b37f3e6fA78Df04cCb20e6',
     'Wednesday': '0x1A6239bFfdAE38Eab75993a1f9db58bd6d201bc3',
     'Thursday': '0x0412CCe86F6d9f77e8Bf3951f6a1B338D0dC6733',
-    'Friday': null, // TBD
+    'Friday': '0x114314F1B45BDC4a5263c4c274A7Fc5b568c587f',
     'Saturday': '0x309e3df326E6eeB280Dbb3CFfC650CCCa8FAEA0e',
     'Sunday': '0x17000F2d038BFD9282aB195718d690F9031d8012'
 };
