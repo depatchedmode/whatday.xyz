@@ -6,7 +6,7 @@ const TOKENS = {
     'Wednesday': '0x1A6239bFfdAE38Eab75993a1f9db58bd6d201bc3',
     'Thursday': '0x0412CCe86F6d9f77e8Bf3951f6a1B338D0dC6733',
     'Friday': '0x114314F1B45BDC4a5263c4c274A7Fc5b568c587f',
-    'Saturday': '0x309e3df326E6eeB280Dbb3CFfC650CCCa8FAEA0e',
+    'Saturday': null, // need to re-launch
     'Sunday': '0x17000F2d038BFD9282aB195718d690F9031d8012'
 };
 
@@ -28,6 +28,11 @@ const ERC20_ABI = [
     'function totalSupply() external view returns (uint256)'
 ];
 
+const MULTICALL3_ADDRESS = '0xcA11bde05977b3631167028862bE2a173976CA11';
+const MULTICALL3_ABI = [
+    'function aggregate((address target, bytes callData)[] calls) external view returns (uint256 blockNumber, bytes[] returnData)'
+];
+
 const provider = new ethers.JsonRpcProvider('https://mainnet.base.org');
 provider.getNetwork().then(network => {
     console.log('Connected to network:', {
@@ -44,13 +49,25 @@ const FEE = 10000; // 1% fee tier
 // Add this helper function for delays
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+function encodeFunction(contract, functionName, params = []) {
+    return contract.interface.encodeFunctionData(functionName, params);
+}
+
+async function multicall(calls) {
+    const multicall = new ethers.Contract(MULTICALL3_ADDRESS, MULTICALL3_ABI, provider);
+    const callStructs = calls.map(({ address, callData }) => ([
+        address, callData
+    ]));
+    
+    const [, returnData] = await multicall.aggregate(callStructs);
+    return returnData;
+}
+
 async function getTokenData(tokenAddress) {
     if (!tokenAddress) return null;
     
     try {
         console.log(`Getting pool for token: ${tokenAddress}`);
-        
-        // Only check 1% fee tier
         const poolAddress = await factory.getPool(tokenAddress, WETH_ADDRESS, FEE);
         console.log(`Pool address: ${poolAddress}`);
         
@@ -59,47 +76,55 @@ async function getTokenData(tokenAddress) {
             return null;
         }
 
-        console.log('Creating contract instances...');
         const pool = new ethers.Contract(poolAddress, POOL_ABI, provider);
         const token = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
 
-        console.log('Fetching pool and token data...');
-        // Get data sequentially instead of in parallel
-        const token0 = await pool.token0();
-        console.log('token0:', token0);
-        await delay(100);
-        
-        const token1 = await pool.token1();
-        console.log('token1:', token1);
-        await delay(100);
-        
-        const slot0 = await pool.slot0();
-        console.log('slot0:', slot0);
-        await delay(100);
-        
-        const decimals = await token.decimals();
-        console.log('decimals:', decimals);
-        await delay(100);
-        
-        const totalSupply = await token.totalSupply();
-        console.log('totalSupply:', totalSupply.toString());
+        // Prepare all calls
+        const calls = [
+            {
+                address: poolAddress,
+                callData: encodeFunction(pool, 'token0')
+            },
+            {
+                address: poolAddress,
+                callData: encodeFunction(pool, 'token1')
+            },
+            {
+                address: poolAddress,
+                callData: encodeFunction(pool, 'slot0')
+            },
+            {
+                address: tokenAddress,
+                callData: encodeFunction(token, 'decimals')
+            },
+            {
+                address: tokenAddress,
+                callData: encodeFunction(token, 'totalSupply')
+            }
+        ];
+
+        // Execute all calls in one batch
+        const results = await multicall(calls);
+
+        // Decode results
+        const token0 = pool.interface.decodeFunctionResult('token0', results[0])[0];
+        const token1 = pool.interface.decodeFunctionResult('token1', results[1])[0];
+        const slot0 = pool.interface.decodeFunctionResult('slot0', results[2]);
+        const decimals = token.interface.decodeFunctionResult('decimals', results[3])[0];
+        const totalSupply = token.interface.decodeFunctionResult('totalSupply', results[4])[0];
 
         // Calculate price from sqrtPriceX96
         const isToken0 = token0.toLowerCase() === tokenAddress.toLowerCase();
-        console.log('isToken0:', isToken0);
         const sqrtPriceX96 = BigInt(slot0[0]);
-        console.log('sqrtPriceX96:', sqrtPriceX96.toString());
-        
-        const sqrtPrice = Number(sqrtPriceX96) / (2 ** 96); // Convert to decimal
+        const sqrtPrice = Number(sqrtPriceX96) / (2 ** 96);
         const priceInETH = isToken0 
             ? sqrtPrice * sqrtPrice
             : 1 / (sqrtPrice * sqrtPrice);
-        console.log('Calculated price in ETH:', priceInETH);
 
         return {
             decimals: Number(decimals),
             totalSupply: totalSupply.toString(),
-            price: priceInETH  // Price in ETH
+            price: priceInETH
         };
     } catch (error) {
         console.error(`Error fetching data for ${tokenAddress}:`, error);
@@ -130,21 +155,19 @@ async function updateUI() {
     
     try {
         console.log('Fetching data for all tokens...');
-        // Process tokens sequentially instead of in parallel
-        const tokenValues = [];
-        for (const [day, address] of Object.entries(TOKENS)) {
+        const tokenPromises = Object.entries(TOKENS).map(async ([day, address]) => {
             console.log(`Processing ${day} token at ${address}`);
             if (!address) {
-                tokenValues.push({ day, fdv: 0 });
-                continue;
+                return { day, fdv: 0 };
             }
             const tokenData = await getTokenData(address);
             console.log(`Token data for ${day}:`, tokenData);
             const fdv = await calculateFDV(tokenData);
             console.log(`FDV for ${day}:`, fdv);
-            tokenValues.push({ day, fdv });
-            await delay(500); // Add delay between tokens
-        }
+            return { day, fdv };
+        });
+
+        const tokenValues = await Promise.all(tokenPromises);
 
         // Find the highest FDV
         const highestToken = tokenValues.reduce((max, current) => {
