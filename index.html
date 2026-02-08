@@ -21,10 +21,25 @@
     <meta name="twitter:description" content="Seven tokens compete in an eternal battle to determine what day it is. The market decides.">
     <meta name="twitter:image" content="https://whatday.xyz/og-image.png">
     <style>
-        @import url('https://fonts.cdnfonts.com/css/comic-sans');
+        @font-face {
+            font-family: 'Atkinson Hyperlegible Mono';
+            font-style: normal;
+            font-weight: 200 800;
+            font-display: swap;
+            src: url('/fonts/atkinson-mono-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+        @font-face {
+            font-family: 'Atkinson Hyperlegible Mono';
+            font-style: italic;
+            font-weight: 200 800;
+            font-display: swap;
+            src: url('/fonts/atkinson-mono-italic-latin.woff2') format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
         
         body {
-            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+            font-family: 'Atkinson Hyperlegible Mono', monospace;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
@@ -37,7 +52,7 @@
             font-size: 36px;
             text-shadow: 0 0 10px #00ff00;
         }
-        
+
         .description {
             max-width: 600px;
             margin: 20px auto;
@@ -48,14 +63,14 @@
             border: 1px solid #00ff00;
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
         }
-        
+
         .current-day {
             font-size: 48px;
             font-weight: bold;
             margin: 40px 0;
             text-shadow: 0 0 5px #00ff00;
         }
-        
+
         .obituary {
             max-width: 600px;
             margin: 40px auto;
@@ -66,14 +81,14 @@
             text-align: left;
             line-height: 1.5;
         }
-        
+
         .obituary .headline {
             color: #ff0000;
             font-size: 16px;
             margin-bottom: 10px;
             text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
         }
-        
+
         .teaser {
             max-width: 600px;
             margin: 40px auto;
@@ -82,42 +97,42 @@
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.3), inset 0 0 20px rgba(0, 255, 0, 0.05);
             text-align: center;
         }
-        
+
         .teaser .headline {
             font-size: 24px;
             color: #00ff00;
             text-shadow: 0 0 10px #00ff00;
             margin-bottom: 15px;
         }
-        
+
         .teaser .subtext {
             font-size: 14px;
             color: #00ff00;
             opacity: 0.8;
             line-height: 1.6;
         }
-        
+
         .teaser .chain-name {
             color: #9945FF;
             text-shadow: 0 0 8px rgba(153, 69, 255, 0.5);
             font-weight: bold;
         }
-        
+
         .countdown {
             font-size: 20px;
             color: yellow;
             text-shadow: 0 0 5px rgba(255, 255, 0, 0.5);
             margin-top: 15px;
         }
-        
+
         .blink {
             animation: blink 1s step-end infinite;
         }
-        
+
         @keyframes blink {
             50% { opacity: 0; }
         }
-        
+
         .token-list {
             display: grid;
             gap: 10px;
@@ -140,21 +155,20 @@
             padding: 15px;
             text-decoration: line-through;
         }
-        
+
         .token-item > :not(a) {
             padding: 15px;
             color: #555;
         }
-        
+
         .legacy-label {
             color: #333;
             font-size: 12px;
             margin-top: 40px;
             margin-bottom: 10px;
         }
-        
+
         /* Scanline effect */
-        
         body::after {
             content: '';
             position: fixed;
@@ -171,9 +185,8 @@
             );
             pointer-events: none;
         }
-        
+
         /* CRT flicker */
-        
         @keyframes flicker {
             0% { opacity: 0.97; }
             5% { opacity: 0.95; }
@@ -182,7 +195,7 @@
             20% { opacity: 1; }
             100% { opacity: 1; }
         }
-        
+
         body {
             animation: flicker 5s infinite;
         }
