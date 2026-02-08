@@ -40,9 +40,10 @@
         
         body {
             font-family: 'Atkinson Hyperlegible Mono', monospace;
-            background: #000;
-            color: #ff8c00;
+            background: #0b0e11;
+            color: #e0e0e0;
             font-size: 13px;
+            font-style: normal;
             line-height: 1.4;
             min-height: 100vh;
         }
@@ -52,14 +53,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #1a1a2e;
-            border-bottom: 1px solid #333;
+            background: #1a1d23;
+            border-bottom: 1px solid #2a2d35;
             padding: 2px 8px;
             font-size: 11px;
-            color: #888;
+            color: #6e7a8a;
         }
         .top-bar .logo {
-            color: #ff8c00;
+            color: #ff6600;
             font-weight: 800;
             font-size: 13px;
             letter-spacing: 2px;
@@ -71,31 +72,31 @@
             grid-template-columns: 1fr 1fr;
             grid-template-rows: auto 1fr auto;
             gap: 1px;
-            background: #222;
+            background: #1a1d23;
             min-height: calc(100vh - 24px);
         }
 
         .panel {
-            background: #000;
+            background: #0b0e11;
             padding: 8px 12px;
             overflow: hidden;
         }
 
         .panel-header {
-            color: #fff;
+            color: #e0e0e0;
             font-weight: 700;
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1px;
             padding-bottom: 4px;
             margin-bottom: 8px;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #2a2d35;
             display: flex;
             justify-content: space-between;
         }
 
         .panel-header .label {
-            color: #888;
+            color: #6e7a8a;
             font-weight: 400;
         }
 
@@ -104,26 +105,25 @@
             grid-column: 1 / -1;
             text-align: center;
             padding: 20px 12px;
-            border-bottom: 2px solid #ff8c00;
+            border-bottom: 2px solid #ff6600;
         }
 
         .hero h1 {
             font-size: 36px;
             font-weight: 800;
-            color: #ff8c00;
+            color: #ff6600;
             letter-spacing: 3px;
         }
 
         .hero .winning-day {
             font-size: 64px;
             font-weight: 800;
-            color: #00ff00;
+            color: #33d778;
             margin: 8px 0;
-            text-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
         }
 
         .hero .subtitle {
-            color: #888;
+            color: #6e7a8a;
             font-size: 12px;
         }
 
@@ -136,13 +136,13 @@
 
         .token-table th {
             text-align: left;
-            color: #888;
+            color: #6e7a8a;
             font-weight: 400;
             font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 1px;
             padding: 4px 0;
-            border-bottom: 1px solid #222;
+            border-bottom: 1px solid #1a1d23;
         }
 
         .token-table th:not(:first-child) {
@@ -151,7 +151,7 @@
 
         .token-table td {
             padding: 6px 0;
-            border-bottom: 1px solid #111;
+            border-bottom: 1px solid #151820;
         }
 
         .token-table td:not(:first-child) {
@@ -159,30 +159,28 @@
         }
 
         .token-table tr:hover {
-            background: #0a0a1a;
+            background: #111520;
         }
 
         .token-table .ticker {
-            color: #fff;
+            color: #e0e0e0;
             font-weight: 700;
         }
 
         .token-table .name {
-            color: #888;
+            color: #6e7a8a;
             font-size: 11px;
         }
 
         .token-table .fdv {
-            color: #ff8c00;
+            color: #ff6600;
         }
 
-        .token-table .positive { color: #00ff00; }
-        .token-table .negative { color: #ff3333; }
         .token-table .winner-row {
-            background: #0a1a0a;
+            background: #0d1a12;
         }
         .token-table .winner-row .ticker {
-            color: #00ff00;
+            color: #33d778;
         }
 
         /* ── Info panel (right) ── */
@@ -190,47 +188,42 @@
             display: flex;
             justify-content: space-between;
             padding: 4px 0;
-            border-bottom: 1px solid #111;
+            border-bottom: 1px solid #151820;
         }
 
         .info-panel .field-label {
-            color: #888;
+            color: #6e7a8a;
             font-size: 11px;
         }
 
         .info-panel .field-value {
-            color: #ff8c00;
+            color: #ff6600;
             font-weight: 600;
         }
 
-        .info-panel .field-value.green { color: #00ff00; }
-        .info-panel .field-value.white { color: #fff; }
+        .info-panel .field-value.green { color: #33d778; }
+        .info-panel .field-value.white { color: #e0e0e0; }
 
         /* ── Teaser panel ── */
         .teaser-panel {
             grid-column: 1 / -1;
             text-align: center;
             padding: 16px;
-            border-top: 2px solid #ff8c00;
+            border-top: 2px solid #ff6600;
         }
 
         .teaser-panel .headline {
-            color: #00ff00;
+            color: #9945FF;
             font-size: 18px;
             font-weight: 700;
             letter-spacing: 2px;
         }
 
         .teaser-panel .subtext {
-            color: #888;
+            color: #6e7a8a;
             font-size: 12px;
             margin-top: 6px;
             line-height: 1.6;
-        }
-
-        .teaser-panel .solana {
-            color: #9945FF;
-            font-weight: 700;
         }
 
         .blink {
@@ -245,20 +238,20 @@
             grid-column: 1 / -1;
             display: flex;
             justify-content: space-between;
-            background: #1a1a2e;
+            background: #1a1d23;
             padding: 2px 8px;
             font-size: 10px;
-            color: #555;
-            border-top: 1px solid #333;
+            color: #4a5568;
+            border-top: 1px solid #2a2d35;
         }
 
         .status-bar .live {
-            color: #00ff00;
+            color: #33d778;
         }
 
         /* ── Links ── */
-        a { color: #ff8c00; text-decoration: none; }
-        a:hover { color: #fff; }
+        a { color: #ff6600; text-decoration: none; }
+        a:hover { color: #e0e0e0; }
 
         /* ── Responsive ── */
         @media (max-width: 640px) {
@@ -347,10 +340,11 @@
         </div>
 
         <div class="panel teaser-panel">
-            <div class="headline">▶ REBOOT IMMINENT<span class="blink">_</span></div>
+            <div class="headline">REBOOT IMMINENT<span class="blink">_</span></div>
             <div class="subtext">
-                The oracle outgrew its chain. A new deployment is coming on <span class="solana">SOLANA</span>.<br>
-                Faster. Cheaper. All seven days. The market will decide what day it is at the speed it deserves.
+                The oracle outgrew its chain.<br>
+                Faster blocks. Cheaper transactions. All seven days.<br>
+                The market will decide what day it is at the speed it deserves.
             </div>
         </div>
 
