@@ -1,8 +1,20 @@
 const fs = require('fs');
 const path = require('path');
 
+// Load the font as base64 for embedding in SVG
+const fontPath = path.join(__dirname, '..', 'public', 'fonts', 'atkinson-mono-latin.woff2');
+const fontBase64 = fs.readFileSync(fontPath).toString('base64');
+
 const SVG = `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <style>
+      @font-face {
+        font-family: 'Atkinson Hyperlegible Mono';
+        src: url(data:font/woff2;base64,${fontBase64}) format('woff2');
+        font-weight: 200 800;
+        font-style: normal;
+      }
+    </style>
     <filter id="glow">
       <feGaussianBlur stdDeviation="3" result="blur"/>
       <feMerge>
@@ -12,28 +24,21 @@ const SVG = `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
     </filter>
   </defs>
   
-  <!-- Background -->
   <rect width="1200" height="630" fill="#000000"/>
   
-  <!-- Scanlines -->
   ${Array.from({length: 315}, (_, i) => 
     `<rect x="0" y="${i*2}" width="1200" height="1" fill="rgba(0,0,0,0.15)"/>`
   ).join('\n  ')}
   
-  <!-- Main text -->
-  <text x="600" y="220" text-anchor="middle" font-family="Comic Sans MS, Comic Sans, cursive, sans-serif" font-size="72" font-weight="bold" fill="#00ff00" filter="url(#glow)">&gt; what day is it?_</text>
+  <text x="600" y="220" text-anchor="middle" font-family="Atkinson Hyperlegible Mono, monospace" font-size="72" font-weight="bold" fill="#00ff00" filter="url(#glow)">&gt; what day is it?_</text>
   
-  <!-- Subtitle -->
-  <text x="600" y="320" text-anchor="middle" font-family="Comic Sans MS, Comic Sans, cursive, sans-serif" font-size="28" fill="#00ff00" opacity="0.8">the world's first decentralized day-of-week oracle</text>
+  <text x="600" y="320" text-anchor="middle" font-family="Atkinson Hyperlegible Mono, monospace" font-size="28" fill="#00ff00" opacity="0.8">the world's first decentralized day-of-week oracle</text>
   
-  <!-- Day tokens -->
-  <text x="600" y="420" text-anchor="middle" font-family="Comic Sans MS, Comic Sans, cursive, sans-serif" font-size="24" fill="#00ff00" opacity="0.6">MON · TUE · WED · THU · FRI · SAT · SUN</text>
+  <text x="600" y="420" text-anchor="middle" font-family="Atkinson Hyperlegible Mono, monospace" font-size="24" fill="#00ff00" opacity="0.6">MON · TUE · WED · THU · FRI · SAT · SUN</text>
   
-  <!-- Bottom text -->
-  <text x="600" y="520" text-anchor="middle" font-family="Comic Sans MS, Comic Sans, cursive, sans-serif" font-size="20" fill="yellow" opacity="0.9">the market decides.</text>
+  <text x="600" y="520" text-anchor="middle" font-family="Atkinson Hyperlegible Mono, monospace" font-size="20" fill="yellow" opacity="0.9">the market decides.</text>
   
-  <!-- URL -->
-  <text x="600" y="580" text-anchor="middle" font-family="Comic Sans MS, Comic Sans, cursive, sans-serif" font-size="18" fill="#00ff00" opacity="0.4">whatday.xyz</text>
+  <text x="600" y="580" text-anchor="middle" font-family="Atkinson Hyperlegible Mono, monospace" font-size="18" fill="#00ff00" opacity="0.4">whatday.xyz</text>
 </svg>`;
 
 const outDir = path.join(__dirname, '..', 'public');
