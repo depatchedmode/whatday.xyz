@@ -148,65 +148,67 @@ async function calculateFDV(tokenData) {
     return fdv;
 }
 
+const TICKERS = {
+    'Monday': 'MON',
+    'Tuesday': 'TUE',
+    'Wednesday': 'WED',
+    'Thursday': 'THU',
+    'Friday': 'FRI',
+    'Saturday': 'SAT',
+    'Sunday': 'SUN',
+};
+
 async function updateUI() {
-    console.log('Starting UI update...');
     const currentDayElement = document.getElementById('currentDay');
     const tokenListElement = document.getElementById('tokenList');
     
     try {
-        console.log('Fetching data for all tokens...');
         const tokenPromises = Object.entries(TOKENS).map(async ([day, address]) => {
-            console.log(`Processing ${day} token at ${address}`);
             if (!address) {
                 return { day, fdv: 0 };
             }
             const tokenData = await getTokenData(address);
-            console.log(`Token data for ${day}:`, tokenData);
             const fdv = await calculateFDV(tokenData);
-            console.log(`FDV for ${day}:`, fdv);
             return { day, fdv };
         });
 
         const tokenValues = await Promise.all(tokenPromises);
 
-        // Find the highest FDV
-        const highestToken = tokenValues.reduce((max, current) => {
-            console.log(`Comparing ${current.day}(${current.fdv}) with ${max.day}(${max.fdv})`);
-            return current.fdv > max.fdv ? current : max;
-        }, { day: 'None', fdv: 0 });
-        
-        console.log('Highest token:', highestToken);
+        // Sort by FDV descending for ranking
+        const sorted = [...tokenValues].sort((a, b) => b.fdv - a.fdv);
+        const rankMap = {};
+        sorted.forEach((t, i) => { rankMap[t.day] = i + 1; });
 
-        // Update the current day display
-        currentDayElement.textContent = highestToken.day;
+        const highestToken = sorted[0] || { day: '—', fdv: 0 };
+        currentDayElement.textContent = highestToken.day.toUpperCase();
 
-        // Update the token list
+        // Render table rows
         tokenListElement.innerHTML = tokenValues
             .map(({ day, fdv }) => {
                 const address = TOKENS[day];
-                const content = `<strong>${day}</strong>: Ξ${fdv.toLocaleString(undefined, {
-                    maximumFractionDigits: 4
-                })} FDV`;
+                const ticker = TICKERS[day] || day.slice(0, 3).toUpperCase();
+                const rank = rankMap[day];
+                const isWinner = day === highestToken.day;
+                const fdvStr = fdv > 0 
+                    ? `Ξ${fdv.toLocaleString(undefined, { maximumFractionDigits: 4 })}` 
+                    : '—';
                 
                 return `
-                    <div class="token-item ${day === highestToken.day ? 'highest' : ''}">
-                        ${address 
-                            ? `<a href="https://www.clanker.world/clanker/${address}" target="_blank" rel="noopener noreferrer">${content}</a>`
-                            : 'Day not yet launched'
-                        }
-                    </div>
+                    <tr class="${isWinner ? 'winner-row' : ''}">
+                        <td class="ticker">${address 
+                            ? `<a href="https://www.clanker.world/clanker/${address}" target="_blank">${ticker}</a>` 
+                            : ticker}</td>
+                        <td class="name">${day}</td>
+                        <td class="fdv">${fdvStr}</td>
+                        <td>${address ? rank : '—'}</td>
+                    </tr>
                 `;
             })
             .join('');
 
     } catch (error) {
         console.error('Error in updateUI:', error);
-        console.error('Full error:', {
-            name: error.name,
-            message: error.message,
-            stack: error.stack
-        });
-        currentDayElement.textContent = 'Error loading data';
+        currentDayElement.textContent = 'ERR';
     }
 }
 
