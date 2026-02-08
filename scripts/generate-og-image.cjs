@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Load the font as base64 for embedding in SVG
-const fontPath = path.join(__dirname, '..', 'public', 'fonts', 'atkinson-mono-latin.woff2');
+const fontPath = path.join(__dirname, '..', 'public', 'fonts', 'AtkinsonHyperlegibleMono-VariableFont_wght.woff2');
 const fontBase64 = fs.readFileSync(fontPath).toString('base64');
 
 const SVG = `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
