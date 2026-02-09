@@ -260,6 +260,7 @@
     <div class="top-bar">
         <span class="logo">WHATDAY</span>
         <span>DECENTRALIZED DAY-OF-WEEK ORACLE</span>
+        <button id="connectWallet" style="background:none;border:1px solid #9945FF;color:#9945FF;font-family:inherit;font-size:11px;padding:1px 8px;cursor:pointer;letter-spacing:1px;">CONNECT</button>
         <span id="clock"></span>
     </div>
 
@@ -273,7 +274,7 @@
         <div class="panel">
             <div class="panel-header">
                 <span>DAY TOKENS</span>
-                <span class="label">FDV IN Ξ</span>
+                <span class="label">FDV IN ◎</span>
             </div>
             <table class="token-table">
                 <thead>
@@ -295,19 +296,15 @@
             </div>
             <div class="field">
                 <span class="field-label">NETWORK</span>
-                <span class="field-value white">ETHEREUM L2</span>
+                <span class="field-value green">LIVE</span>
             </div>
             <div class="field">
                 <span class="field-label">DEX</span>
-                <span class="field-value white">UNISWAP V3</span>
+                <span class="field-value white">DEX AGGREGATOR</span>
             </div>
             <div class="field">
-                <span class="field-label">FEE TIER</span>
-                <span class="field-value">1.00%</span>
-            </div>
-            <div class="field">
-                <span class="field-label">TOKENS ACTIVE</span>
-                <span class="field-value">6 / 7</span>
+                <span class="field-label">TOKENS</span>
+                <span class="field-value">7 / 7</span>
             </div>
             <div class="field">
                 <span class="field-label">ORACLE METHOD</span>
@@ -327,21 +324,20 @@
             </div>
             <div class="field" style="margin-top: 12px; border-top: 1px solid #333; padding-top: 8px;">
                 <span class="field-label">STATUS</span>
-                <span class="field-value" style="color: #ff3333;">DEPRECATED</span>
+                <span class="field-value green">OPERATIONAL</span>
             </div>
         </div>
 
         <div class="panel teaser-panel">
             <div class="headline">REBOOT IMMINENT<span class="blink">_</span></div>
             <div class="subtext">
-                The oracle outgrew its chain.<br>
                 Faster blocks. Cheaper transactions. All seven days.<br>
                 The market will decide what day it is at the speed it deserves.
             </div>
         </div>
 
         <div class="status-bar">
-            <span><span class="live">●</span> LEGACY FEED — READ ONLY</span>
+            <span><span class="live">●</span> LIVE FEED</span>
             <span>NO COMMITTEES · NO VOTING · PURE MARKET FORCES</span>
             <span id="statusTime"></span>
         </div>
