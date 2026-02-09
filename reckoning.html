@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE RECKONING — whatday.xyz</title>
+    <meta name="description" content="The Reckoning: Burn day-tokens to vote for the Solana launch day. Hold to bet on the winner. The market decides.">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whatday.xyz/reckoning">
+    <meta property="og:title" content="THE RECKONING — whatday.xyz">
+    <meta property="og:description" content="Burn to vote. Hold to bet. Seven days. One winner. The Reckoning decides when whatday launches on Solana.">
+    <meta property="og:image" content="https://whatday.xyz/og-image.png">
+    
+    <style>
+        @font-face {
+            font-family: 'Atkinson Hyperlegible Mono';
+            font-style: normal;
+            font-weight: 200 800;
+            font-display: swap;
+            src: url('/fonts/AtkinsonHyperlegibleMono-VariableFont_wght.woff2') format('woff2-variations');
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Atkinson Hyperlegible Mono', monospace;
+            background: #0b0e11;
+            color: #e0e0e0;
+            font-size: 13px;
+            line-height: 1.4;
+            min-height: 100vh;
+        }
+
+        a { color: #ff6600; text-decoration: none; }
+        a:hover { color: #e0e0e0; }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1a1d23;
+            border-bottom: 1px solid #2a2d35;
+            padding: 2px 8px;
+            font-size: 11px;
+            color: #6e7a8a;
+        }
+        .top-bar .logo { color: #ff6600; font-weight: 800; font-size: 13px; letter-spacing: 2px; }
+        .top-bar nav a { margin-left: 16px; font-size: 11px; letter-spacing: 1px; }
+        .top-bar nav a.active { color: #9945FF; }
+
+        .terminal {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto auto auto auto;
+            gap: 1px;
+            background: #1a1d23;
+            min-height: calc(100vh - 24px);
+        }
+
+        .panel {
+            background: #0b0e11;
+            padding: 8px 12px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            color: #e0e0e0;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-bottom: 4px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #2a2d35;
+            display: flex;
+            justify-content: space-between;
+        }
+        .panel-header .label { color: #6e7a8a; font-weight: 400; }
+
+        /* ── Hero ── */
+        .hero {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 24px 12px 16px;
+            border-bottom: 2px solid #9945FF;
+        }
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            color: #9945FF;
+            letter-spacing: 6px;
+        }
+        .hero .winning-day {
+            font-size: 56px;
+            font-weight: 800;
+            color: #33d778;
+            margin: 8px 0 4px;
+        }
+        .hero .winning-sub {
+            color: #6e7a8a;
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+        .hero .countdown-label {
+            color: #ff6600;
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
+        }
+        .hero .countdown {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ff6600;
+            letter-spacing: 4px;
+        }
+        .hero .explainer {
+            color: #6e7a8a;
+            font-size: 12px;
+            margin-top: 12px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* ── Tables ── */
+        .full-width { grid-column: 1 / -1; }
+
+        .token-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .token-table th {
+            text-align: left;
+            color: #6e7a8a;
+            font-weight: 400;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 6px;
+            border-bottom: 1px solid #1a1d23;
+        }
+        .token-table th:not(:first-child) { text-align: right; }
+        .token-table td {
+            padding: 6px;
+            border-bottom: 1px solid #151820;
+        }
+        .token-table td:not(:first-child) { text-align: right; }
+        .token-table tr:hover { background: #111520; }
+        .token-table .ticker { color: #e0e0e0; font-weight: 700; }
+        .token-table .name { color: #6e7a8a; font-size: 11px; }
+        .token-table .winner-row { background: #0d1a12; }
+        .token-table .winner-row .ticker { color: #33d778; }
+
+        /* Burn bar */
+        .burn-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        .burn-bar-wrap {
+            width: 80px;
+            height: 8px;
+            background: #1a1d23;
+            border-radius: 1px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .burn-bar {
+            height: 100%;
+            background: #9945FF;
+            transition: width 0.3s;
+        }
+        .winner-row .burn-bar { background: #33d778; }
+
+        /* ── How It Works ── */
+        .how-it-works {
+            grid-column: 1 / -1;
+            padding: 16px 12px;
+        }
+        .how-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .how-card {
+            background: #111520;
+            border: 1px solid #2a2d35;
+            padding: 12px;
+        }
+        .how-card h3 {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+        .how-card h3.burn { color: #ff6600; }
+        .how-card h3.hold { color: #33d778; }
+        .how-card h3.king { color: #9945FF; }
+        .how-card p {
+            color: #6e7a8a;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        /* ── Status bar ── */
+        .status-bar {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            background: #1a1d23;
+            padding: 2px 8px;
+            font-size: 10px;
+            color: #4a5568;
+            border-top: 1px solid #2a2d35;
+        }
+        .status-bar .live { color: #9945FF; }
+
+        .blink { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        @media (max-width: 640px) {
+            .terminal { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 28px; letter-spacing: 3px; }
+            .hero .winning-day { font-size: 36px; }
+            .hero .countdown { font-size: 20px; }
+            .how-grid { grid-template-columns: 1fr; }
+            .burn-bar-wrap { width: 50px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <span class="logo">WHATDAY</span>
+        <nav>
+            <a href="/">ORACLE</a>
+            <a href="/reckoning.html" class="active">THE RECKONING</a>
+        </nav>
+        <span id="clock"></span>
+    </div>
+
+    <div class="terminal">
+        <!-- Hero -->
+        <div class="panel hero">
+            <h1>THE RECKONING<span class="blink">_</span></h1>
+            <div class="winning-day" id="winningDay">—</div>
+            <div class="winning-sub" id="winningTicker">LOADING...</div>
+            <div class="countdown-label">TIME REMAINING</div>
+            <div class="countdown" id="countdown">--D --H --M --S</div>
+            <div class="explainer">
+                Burn your Base day-tokens to vote for the Solana launch day.<br>
+                Hold them to bet on the winner. Seven days enter. One day wins.
+            </div>
+        </div>
+
+        <!-- Burn Leaderboard -->
+        <div class="panel full-width">
+            <div class="panel-header">
+                <span>🔥 BURN LEADERBOARD</span>
+                <span class="label">BURN = VOTE</span>
+            </div>
+            <table class="token-table">
+                <thead>
+                    <tr>
+                        <th>DAY</th>
+                        <th>TOTAL BURNED</th>
+                        <th>% SUPPLY</th>
+                        <th>KING (TOP BURNER)</th>
+                        <th>BURNERS</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="burnTable"></tbody>
+            </table>
+        </div>
+
+        <!-- Hold Standings -->
+        <div class="panel full-width">
+            <div class="panel-header">
+                <span>💎 HOLD STANDINGS</span>
+                <span class="label">HOLD = BET</span>
+            </div>
+            <table class="token-table">
+                <thead>
+                    <tr>
+                        <th>DAY</th>
+                        <th>TOTAL HOLDERS</th>
+                        <th>TOP HOLDER</th>
+                    </tr>
+                </thead>
+                <tbody id="holdTable"></tbody>
+            </table>
+        </div>
+
+        <!-- How It Works -->
+        <div class="panel how-it-works">
+            <div class="panel-header">
+                <span>HOW IT WORKS</span>
+                <span class="label">GAME THEORY</span>
+            </div>
+            <div class="how-grid">
+                <div class="how-card">
+                    <h3 class="burn">🔥 BURN = VOTE</h3>
+                    <p>
+                        Burn your day-token to vote for that day as the Solana launch day.
+                        Burn $MON → vote Monday. Burn $FRI → vote Friday.
+                        The day with the most tokens burned wins the vote.
+                        Burns are permanent and irreversible.
+                    </p>
+                </div>
+                <div class="how-card">
+                    <h3 class="hold">💎 HOLD = BET</h3>
+                    <p>
+                        Hold day-tokens to bet on which day will win.
+                        If you hold the winning day's token when The Reckoning ends,
+                        you qualify for a Founders Clock NFT on Solana.
+                        Diamond hands get rewarded.
+                    </p>
+                </div>
+                <div class="how-card">
+                    <h3 class="king">👑 KINGS OF DAYS</h3>
+                    <p>
+                        The biggest burner of each day-token becomes the King of that Day.
+                        Seven days, seven crowns. Kings are recognized on-chain
+                        and earn special status in the whatday Solana ecosystem.
+                        Dethrone the king by burning more.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span><span class="live">●</span> THE RECKONING — LIVE</span>
+            <span>BURN TO VOTE · HOLD TO BET · SEVEN DAYS · ONE WINNER</span>
+            <span id="statusTime"></span>
+        </div>
+    </div>
+
+    <script type="module" src="/src/reckoning.js"></script>
+</body>
+</html>
